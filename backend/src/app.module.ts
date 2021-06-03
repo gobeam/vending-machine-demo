@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as config from 'config';
 import { SeedsModule } from './seeds/seed.module';
 import {ProductSeed} from "./products/seeds/product.seed";
+import { VendingMachineModule } from './vending-machine/vending-machine.module';
 
 const { type, host, database, port } = config.db;
 console.log(`${type}://${host}:${port}/${database}`);
@@ -11,7 +12,8 @@ console.log(`${type}://${host}:${port}/${database}`);
   imports: [
     MongooseModule.forRoot(`${type}://${host}:${port}/${database}`),
     ProductsModule,
-    SeedsModule
+    SeedsModule,
+    VendingMachineModule
   ],
   controllers: [],
   providers: [ProductSeed],

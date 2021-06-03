@@ -4,10 +4,12 @@ import { Product, ProductDocument } from './entities/product.entity';
 import { Model } from 'mongoose';
 
 @Injectable()
-export class ProductsService {
+export class ProductsService{
   constructor(
     @InjectModel('Product') private readonly model: Model<ProductDocument>,
-  ) {}
+  ) {
+
+  }
 
   /**
    * Create multiple products
@@ -20,7 +22,7 @@ export class ProductsService {
   /**
    * Get all products
    */
-  findAll(): Promise<Product[]> {
+  async findAll(): Promise<Product[]> {
     return this.model.find().exec();
   }
 }
