@@ -5,6 +5,7 @@ import * as config from 'config';
 import { SeedsModule } from './seeds/seed.module';
 import {ProductSeed} from "./products/seeds/product.seed";
 import { VendingMachineModule } from './vending-machine/vending-machine.module';
+import { CustomerModule } from './customer/customer.module';
 
 const { type, host, database, port } = config.db;
 console.log(`${type}://${host}:${port}/${database}`);
@@ -13,7 +14,8 @@ console.log(`${type}://${host}:${port}/${database}`);
     MongooseModule.forRoot(`${type}://${host}:${port}/${database}`),
     ProductsModule,
     SeedsModule,
-    VendingMachineModule
+    VendingMachineModule,
+    CustomerModule
   ],
   controllers: [],
   providers: [ProductSeed],
