@@ -92,6 +92,6 @@ describe('CustomerService', () => {
   it('delete customer by id', async () => {
     const _id = 'testId';
     await service.remove(_id);
-    expect(model.remove).toHaveBeenCalledWith({ id: _id });
+    expect(model.remove).toHaveBeenCalledWith({ _id });
   });
 });
