@@ -35,7 +35,7 @@ export class CustomerService {
    * get customer by id
    * @param id
    */
-  async findOne(id: string): Promise<Customer> {
+  async findOne(id: string): Promise<CustomerDocument> {
     return this.model.findById(id).exec();
   }
 

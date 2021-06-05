@@ -4,7 +4,7 @@ import { Product, ProductDocument } from './entities/product.entity';
 import { Model } from 'mongoose';
 
 @Injectable()
-export class ProductsService {
+export class ProductService {
   constructor(
     @InjectModel('Product') private readonly model: Model<ProductDocument>,
   ) {}
@@ -22,5 +22,13 @@ export class ProductsService {
    */
   async findAll(): Promise<Product[]> {
     return this.model.find().exec();
+  }
+
+  /**
+   * find by id
+   * @param id
+   */
+  async findOne(id: string): Promise<Product> {
+    return this.model.findById(id).exec();
   }
 }

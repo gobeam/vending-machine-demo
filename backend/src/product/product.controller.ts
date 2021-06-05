@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import { ProductsService } from './products.service';
+import { ProductService } from './product.service';
 import { ApiTags } from '@nestjs/swagger';
-import {Product} from "./entities/product.entity";
+import { Product } from './entities/product.entity';
 
 @ApiTags('products')
 @Controller('products')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+export class ProductController {
+  constructor(private readonly productsService: ProductService) {}
 
   @Get()
   findAll(): Promise<Product[]> {

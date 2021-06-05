@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductsService } from './products.service';
+import { ProductService } from './product.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product, ProductDocument } from './entities/product.entity';
@@ -14,12 +14,12 @@ const mockProductModel = () => ({
 });
 
 describe('ProductsService', () => {
-  let service: ProductsService, model;
+  let service: ProductService, model;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ProductsService,
+        ProductService,
         {
           provide: getModelToken('Product'),
           useFactory: mockProductModel,
@@ -27,7 +27,7 @@ describe('ProductsService', () => {
       ],
     }).compile();
 
-    service = module.get<ProductsService>(ProductsService);
+    service = module.get<ProductService>(ProductService);
     model = module.get<Model<ProductDocument>>(getModelToken('Product'));
   });
 
@@ -46,5 +46,5 @@ describe('ProductsService', () => {
     expect(model.find).toHaveBeenCalledTimes(1);
     expect(model.find().exec).toHaveBeenCalledTimes(1);
     expect(result).toEqual([mockProduct]);
-  })
+  });
 });
