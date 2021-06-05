@@ -1,17 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import history from 'utils/history';
+import 'sanitize.css/sanitize.css';
+import App from 'containers/App';
+import configureStore from 'configure-store';
+import { throttle } from 'lodash';
+import reportWebVitals from 'reportWebVitals';
+import { loadState, saveState } from 'services/persist.service';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+
+// Create redux store with history
+const initialState = loadState();
+const store = configureStore(initialState, history);
+const MOUNT_NODE = document.getElementById('root');
+
+store.subscribe(
+    throttle(() => {
+        saveState({
+            language: store.getState().language,
+            global: store.getState().global,
+        });
+    }, 1000),
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const render = (messages) => {
+    ReactDOM.render(
+        <Provider store={store}>
+                <ConnectedRouter history={history}>
+                    <App />
+                </ConnectedRouter>
+        </Provider>,
+        MOUNT_NODE,
+    );
+};
+render();
+
+if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line no-console
+    reportWebVitals(console.log);
+}
