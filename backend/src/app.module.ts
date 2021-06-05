@@ -6,7 +6,7 @@ import { SeedsModule } from './seeds/seed.module';
 import { ProductSeed } from './product/seeds/product.seed';
 import { VendingMachineModule } from './vending-machine/vending-machine.module';
 import { CustomerModule } from './customer/customer.module';
-import { OrdersModule } from './order/orders.module';
+import { OrderModule } from './order/order.module';
 import { BalanceModule } from './balance/balance.module';
 
 const { type, host, database, port } = config.db;
@@ -19,7 +19,7 @@ console.log(`${type}://${host}:${port}/${database}`);
     SeedsModule,
     VendingMachineModule,
     CustomerModule,
-    OrdersModule,
+    OrderModule,
     BalanceModule,
   ],
   controllers: [],

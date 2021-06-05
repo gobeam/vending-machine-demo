@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { OrdersController } from './orders.controller';
+import {forwardRef, Module} from '@nestjs/common';
+import { OrderService } from './order.service';
+import { OrderController } from './order.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { OrderSchema } from './entities/order.entity';
 import { ProductModule } from '../product/product.module';
@@ -11,10 +11,11 @@ import { BalanceModule } from '../balance/balance.module';
   imports: [
     MongooseModule.forFeature([{ name: 'Order', schema: OrderSchema }]),
     ProductModule,
-    CustomerModule,
+    forwardRef(() => CustomerModule),
     BalanceModule,
   ],
-  controllers: [OrdersController],
-  providers: [OrdersService],
+  controllers: [OrderController],
+  providers: [OrderService],
+  exports: [OrderService],
 })
-export class OrdersModule {}
+export class OrderModule {}

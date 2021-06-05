@@ -9,7 +9,7 @@ import { BalanceService } from '../balance/balance.service';
 import { BalanceTypeInterface } from '../balance/interfaces/balance-type.interface';
 
 @Injectable()
-export class OrdersService {
+export class OrderService {
   constructor(
     @InjectModel('Order') private readonly model: mongoose.Model<OrderDocument>,
     private readonly productService: ProductService,
@@ -54,6 +54,41 @@ export class OrdersService {
     });
     const [balance, order] = await Promise.all([balancePromise, orderPromise]);
     return order;
+  }
+
+  /**
+   * refund order
+   * @param id
+   */
+  async refund(id: string): Promise<Order> {
+    let order = await this.model.findById(id).exec();
+    if (order.status === OrderStatus.REFUND) {
+      throw new ForbiddenException('order already refunded');
+    }
+    order.status = OrderStatus.REFUND;
+    await order.save();
+    await this.balanceService.create({
+      amount: order.amount,
+      type: BalanceTypeInterface.DEBIT,
+      vendingMachine: order.vendingMachine,
+    });
+    return order;
+  }
+
+  /**
+   * get expense balance
+   * @param id
+   */
+  async getExpenseBalance(id: string) {
+    let expenseAmount = 0;
+    let result = await this.getCustomerPaidOrderBalance(id);
+    if (result[0]) {
+      expenseAmount += result[0]['totalAmount'];
+    }
+    return {
+      customer: id,
+      expenseAmount,
+    };
   }
 
   /**

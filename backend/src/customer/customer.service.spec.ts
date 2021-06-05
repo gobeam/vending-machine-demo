@@ -6,6 +6,7 @@ import { CustomerDocument } from './entities/customer.entity';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { OrderService } from '../order/order.service';
 
 const mockCustomer = { token: 'tester', balance: 100 };
 const mockCustomerModel = () => ({
@@ -17,9 +18,12 @@ const mockCustomerModel = () => ({
   insertMany: jest.fn(),
   exec: jest.fn(),
 });
+const mockOrderService = () => ({
+  getCustomerPaidOrderBalance: jest.fn(),
+});
 
 describe('CustomerService', () => {
-  let service: CustomerService, model;
+  let service: CustomerService, model, orderService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,10 +33,15 @@ describe('CustomerService', () => {
           provide: getModelToken('Customer'),
           useFactory: mockCustomerModel,
         },
+        {
+          provide: OrderService,
+          useFactory: mockOrderService,
+        },
       ],
     }).compile();
 
     service = module.get<CustomerService>(CustomerService);
+    orderService = module.get<OrderService>(OrderService);
     model = module.get<Model<CustomerDocument>>(getModelToken('Customer'));
   });
 

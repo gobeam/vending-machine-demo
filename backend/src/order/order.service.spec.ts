@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OrdersService } from './orders.service';
+import { OrderService } from './order.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Order, OrderDocument, PaymentType } from './entities/order.entity';
@@ -15,12 +15,14 @@ const mockOrder = {
   vendingMachine: 'vendingId',
   quantity: 1,
   paymentType: PaymentType.COIN,
+  save: jest.fn(),
 };
 
 const mockProduct = { name: 'Coke', price: 20, stock: 10 };
 const mockCustomer = { token: 'tester', balance: 100 };
 const mockOrderModel = () => ({
   create: jest.fn(),
+  findById: jest.fn(),
   remove: jest.fn(),
   exec: jest.fn(),
 });
@@ -38,12 +40,12 @@ const mockCustomerService = () => ({
 });
 
 describe('OrdersService', () => {
-  let service: OrdersService, model, productService, customerService, balanceService;
+  let service: OrderService, model, productService, customerService, balanceService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        OrdersService,
+        OrderService,
         {
           provide: getModelToken('Order'),
           useFactory: mockOrderModel,
@@ -62,7 +64,7 @@ describe('OrdersService', () => {
         },],
     }).compile();
 
-    service = module.get<OrdersService>(OrdersService);
+    service = module.get<OrderService>(OrderService);
     productService = module.get<ProductService>(ProductService);
     customerService = module.get<CustomerService>(CustomerService);
     balanceService = module.get<BalanceService>(BalanceService);
@@ -119,9 +121,27 @@ describe('OrdersService', () => {
     });
   });
 
+  it('refund order that exist in system', async() => {
+    jest.spyOn(model, 'findById').mockReturnValue({
+      exec: jest.fn().mockResolvedValueOnce(mockOrder),
+    } as any);
+    await service.refund('orderId');
+    expect(model.findById).toHaveBeenCalledTimes(1);
+    expect(model.findById).toHaveBeenCalledWith('orderId');
+    expect(balanceService.create).toHaveBeenCalledTimes(1);
+  });
+
   it('delete order by id', async () => {
     const _id = 'testId';
     await service.remove(_id);
     expect(model.remove).toHaveBeenCalledWith({ _id });
   });
+
+  it('get customer expense amount from orders', async() => {
+    jest.spyOn(service, 'getCustomerPaidOrderBalance').mockResolvedValue([
+      { totalAmount: 100 },
+    ]);
+    await service.getExpenseBalance('clientId');
+    expect(service.getCustomerPaidOrderBalance).toHaveBeenCalledTimes(1);
+  } )
 });

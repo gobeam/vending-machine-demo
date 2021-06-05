@@ -1,18 +1,15 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Customer, CustomerDocument } from './entities/customer.entity';
+import { OrderService } from '../order/order.service';
 
 @Injectable()
 export class CustomerService {
   constructor(
-    @InjectModel('Customer') private readonly model: Model<CustomerDocument>,
+    @InjectModel('Customer') private readonly model: Model<CustomerDocument>
   ) {}
 
   /**
@@ -37,6 +34,22 @@ export class CustomerService {
    */
   async findOne(id: string): Promise<CustomerDocument> {
     return this.model.findById(id).exec();
+  }
+
+  /**
+   * get expense balance
+   * @param id
+   */
+  async getExpenseBalance(id: string) {
+    let expenseAmount = 0;
+    // let result = await this.orderService.getCustomerPaidOrderBalance(id);
+    // if (result[0]) {
+    //   expenseAmount += result[0]['totalAmount'];
+    // }
+    return {
+      customer: id,
+      expenseAmount,
+    };
   }
 
   /**
