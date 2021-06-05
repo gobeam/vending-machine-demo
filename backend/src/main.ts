@@ -49,12 +49,8 @@ async function bootstrap() {
       .setTitle(apiConfig.name)
       .setDescription(apiConfig.description)
       .setVersion(apiConfig.version)
-      .addBearerAuth()
       .build();
   const customOptions: SwaggerCustomOptions = {
-    swaggerOptions: {
-      persistAuthorization: true
-    },
     customSiteTitle: apiConfig.description
   };
   const document = SwaggerModule.createDocument(app, swaggerConfig);

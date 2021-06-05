@@ -2,11 +2,12 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import { Order, OrderDocument, OrderStatus } from './entities/order.entity';
+import { Order, OrderDocument } from './entities/order.entity';
 import { ProductService } from '../product/product.service';
 import { CustomerService } from '../customer/customer.service';
 import { BalanceService } from '../balance/balance.service';
 import { BalanceTypeInterface } from '../balance/interfaces/balance-type.interface';
+import {OrderStatusInterface} from "./interfaces/order-status.interface";
 
 @Injectable()
 export class OrderService {
@@ -50,7 +51,7 @@ export class OrderService {
     const orderPromise = this.model.create({
       ...createOrderDto,
       amount: orderAmount,
-      status: OrderStatus.PAID,
+      status: OrderStatusInterface.PAID,
     });
     const [balance, order] = await Promise.all([balancePromise, orderPromise]);
     return order;
@@ -62,10 +63,10 @@ export class OrderService {
    */
   async refund(id: string): Promise<Order> {
     let order = await this.model.findById(id).exec();
-    if (order.status === OrderStatus.REFUND) {
+    if (order.status === OrderStatusInterface.REFUND) {
       throw new ForbiddenException('order already refunded');
     }
-    order.status = OrderStatus.REFUND;
+    order.status = OrderStatusInterface.REFUND;
     await order.save();
     await this.balanceService.create({
       amount: order.amount,
@@ -100,7 +101,7 @@ export class OrderService {
       .aggregate([
         {
           $match: {
-            status: OrderStatus.PAID,
+            status: OrderStatusInterface.PAID,
             customer: new mongoose.Types.ObjectId(customer),
           },
         },

@@ -1,18 +1,9 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import {OrderStatusInterface} from "../interfaces/order-status.interface";
+import {PaymentTypeInterface} from "../interfaces/payment-type.interface";
 
 export type OrderDocument = Order & Document;
-
-export enum OrderStatus {
-    PAID = 'paid',
-    UNPAID = 'unpaid',
-    REFUND = 'refund',
-}
-
-export enum PaymentType {
-    COIN = 'coin',
-    CASH = 'cash',
-}
 
 @Schema()
 export class Order {
@@ -27,10 +18,10 @@ export class Order {
     product: string;
 
     @Prop()
-    status: OrderStatus;
+    status: OrderStatusInterface;
 
     @Prop()
-    paymentType: PaymentType;
+    paymentType: PaymentTypeInterface;
 
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Customer' })
     customer: string;

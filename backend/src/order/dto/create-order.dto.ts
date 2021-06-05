@@ -1,6 +1,6 @@
 import { IsIn, IsNotEmpty, IsNumberString } from 'class-validator';
-import { PaymentType } from '../entities/order.entity';
 import {ApiProperty} from "@nestjs/swagger";
+import {PaymentTypeInterface} from "../interfaces/payment-type.interface";
 
 export class CreateOrderDto {
   @ApiProperty()
@@ -21,6 +21,6 @@ export class CreateOrderDto {
   vendingMachine: string;
 
   @ApiProperty()
-  @IsIn([PaymentType.COIN, PaymentType.CASH])
-  paymentType: PaymentType;
+  @IsIn([PaymentTypeInterface.COIN, PaymentTypeInterface.CASH])
+  paymentType: PaymentTypeInterface;
 }
