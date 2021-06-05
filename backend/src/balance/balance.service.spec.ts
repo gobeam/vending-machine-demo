@@ -12,6 +12,7 @@ const mockBalance = {
 };
 const mockBalanceModel = () => ({
   create: jest.fn(),
+  aggregate: jest.fn(),
   exec: jest.fn(),
 });
 
@@ -37,5 +38,14 @@ describe('BalanceService', () => {
     await service.create(mockBalance);
     expect(model.create).toHaveBeenCalledWith(mockBalance);
     expect(model.create).toHaveBeenCalledTimes(1);
+  });
+
+  it('get balance', async () => {
+      jest.spyOn(model, 'aggregate').mockReturnValue({
+          exec: jest.fn().mockResolvedValueOnce([]),
+      } as any);
+    await service.getBalance('60b8c2163a53077270b63812');
+    expect(model.aggregate).toHaveBeenCalledTimes(1);
+    expect(model.aggregate().exec).toHaveBeenCalledTimes(1);
   });
 });
