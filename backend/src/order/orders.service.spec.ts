@@ -7,6 +7,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { ProductService } from '../product/product.service';
 import { CustomerService } from '../customer/customer.service';
 import { ForbiddenException } from '@nestjs/common';
+import {BalanceService} from "../balance/balance.service";
 
 const mockOrder = {
   customer: '60b8c2163a53077270b63812',
@@ -28,12 +29,16 @@ const mockProductService = () => ({
   findOne: jest.fn(),
 });
 
+const mockBalanceService = () => ({
+  create: jest.fn(),
+});
+
 const mockCustomerService = () => ({
   findOne: jest.fn(),
 });
 
 describe('OrdersService', () => {
-  let service: OrdersService, model, productService, customerService;
+  let service: OrdersService, model, productService, customerService, balanceService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -51,12 +56,16 @@ describe('OrdersService', () => {
           provide: CustomerService,
           useFactory: mockCustomerService,
         },
-      ],
+        {
+          provide: BalanceService,
+          useFactory: mockBalanceService,
+        },],
     }).compile();
 
     service = module.get<OrdersService>(OrdersService);
     productService = module.get<ProductService>(ProductService);
     customerService = module.get<CustomerService>(CustomerService);
+    balanceService = module.get<BalanceService>(BalanceService);
     model = module.get<Model<OrderDocument>>(getModelToken('Order'));
   });
 
@@ -97,11 +106,13 @@ describe('OrdersService', () => {
     it('create successful order', async () => {
       productService.findOne.mockResolvedValue(mockProduct);
       customerService.findOne.mockResolvedValue(mockCustomer);
+      balanceService.create.mockResolvedValue({});
       input.quantity = 1;
       jest.spyOn(service, 'getCustomerPaidOrderBalance').mockResolvedValue([{totalAmount: 50}]);
       await service.create(input);
       expect(productService.findOne).toHaveBeenCalledTimes(1);
       expect(customerService.findOne).toHaveBeenCalledTimes(1);
+      expect(balanceService.create).toHaveBeenCalledTimes(1);
       expect(service.getCustomerPaidOrderBalance).toHaveBeenCalledTimes(1);
       expect(model.create).toHaveBeenCalledTimes(1);
 

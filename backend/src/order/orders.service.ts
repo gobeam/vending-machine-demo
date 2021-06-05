@@ -5,6 +5,8 @@ import * as mongoose from 'mongoose';
 import { Order, OrderDocument, OrderStatus } from './entities/order.entity';
 import { ProductService } from '../product/product.service';
 import { CustomerService } from '../customer/customer.service';
+import { BalanceService } from '../balance/balance.service';
+import { BalanceTypeInterface } from '../balance/interfaces/balance-type.interface';
 
 @Injectable()
 export class OrdersService {
@@ -12,6 +14,7 @@ export class OrdersService {
     @InjectModel('Order') private readonly model: mongoose.Model<OrderDocument>,
     private readonly productService: ProductService,
     private readonly customerService: CustomerService,
+    private readonly balanceService: BalanceService,
   ) {}
 
   /**
@@ -38,13 +41,25 @@ export class OrdersService {
     if (customerBalance < orderAmount) {
       throw new ForbiddenException('balance not enough');
     }
-    return this.model.create({
+
+    const balancePromise = this.balanceService.create({
+      amount: orderAmount,
+      type: BalanceTypeInterface.CREDIT,
+      vendingMachine: createOrderDto.vendingMachine,
+    });
+    const orderPromise = this.model.create({
       ...createOrderDto,
       amount: orderAmount,
       status: OrderStatus.PAID,
     });
+    const [balance, order] = await Promise.all([balancePromise, orderPromise]);
+    return order;
   }
 
+  /**
+   * Get total amount of customer paid orders
+   * @param customer
+   */
   async getCustomerPaidOrderBalance(customer: string) {
     return this.model
       .aggregate([

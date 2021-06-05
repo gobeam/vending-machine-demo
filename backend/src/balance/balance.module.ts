@@ -9,5 +9,6 @@ import { BalanceSchema } from './entities/balance.entity';
   ],
   controllers: [],
   providers: [BalanceService],
+  exports: [BalanceService],
 })
 export class BalanceModule {}

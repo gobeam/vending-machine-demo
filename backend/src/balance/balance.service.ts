@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBalanceDto } from './dto/create-balance.dto';
-import { UpdateBalanceDto } from './dto/update-balance.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Balance, BalanceDocument } from './entities/balance.entity';
 
 @Injectable()
 export class BalanceService {
-  create(createBalanceDto: CreateBalanceDto) {
-    return 'This action adds a new balance';
+  constructor(
+    @InjectModel('Balance') private readonly model: Model<BalanceDocument>,
+  ) {}
+
+  create(createBalanceDto: Balance): Promise<Balance> {
+    return this.model.create(createBalanceDto);
   }
 
   findAll() {
@@ -16,7 +21,7 @@ export class BalanceService {
     return `This action returns a #${id} balance`;
   }
 
-  update(id: number, updateBalanceDto: UpdateBalanceDto) {
+  update(id: number, updateBalanceDto: Partial<Balance>) {
     return `This action updates a #${id} balance`;
   }
 
