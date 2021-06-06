@@ -8,7 +8,7 @@ import { UnprocessableEntityException } from '@nestjs/common';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { OrderService } from '../order/order.service';
 
-const mockCustomer = { token: 'tester', balance: 100 };
+const mockCustomer = { token: 'tester', balance: 100, save: jest.fn() };
 const mockCustomerModel = () => ({
   remove: jest.fn(),
   findOne: jest.fn(),
@@ -82,20 +82,16 @@ describe('CustomerService', () => {
 
   it('update customer by id', async () => {
     const _id = 'testId';
-    let input: UpdateCustomerDto = {
+    const input: UpdateCustomerDto = {
       token: 'tester',
       balance: 50,
     };
-    jest.spyOn(model, 'findOneAndUpdate').mockReturnValue({
-      exec: jest.fn().mockResolvedValueOnce([input]),
+    jest.spyOn(model, 'findById').mockReturnValue({
+      exec: jest.fn().mockResolvedValueOnce(mockCustomer),
     } as any);
     await service.update(_id, input);
-    expect(model.findOneAndUpdate).toHaveBeenCalledWith({ _id }, input, {
-      new: true,
-    });
-    expect(model.findOneAndUpdate({ _id }, input).exec).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(model.findById).toHaveBeenCalledWith(_id);
+    expect(model.findById().exec).toHaveBeenCalledTimes(1);
   });
 
   it('delete customer by id', async () => {

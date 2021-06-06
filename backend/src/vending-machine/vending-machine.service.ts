@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateVendingMachineDto } from './dto/create-vending-machine.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { VendingMachine } from './entities/vending-machine.entity';
@@ -15,7 +14,7 @@ export class VendingMachineService {
    * Create new vending Machine
    * @param createVendingMachineDto
    */
-  create(createVendingMachineDto: CreateVendingMachineDto) {
+  create(createVendingMachineDto: VendingMachine): Promise<VendingMachine> {
     return this.model.create(createVendingMachineDto);
   }
 

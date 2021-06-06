@@ -14,6 +14,7 @@ import saga from 'containers/App/saga';
 import { publicRoutes } from 'routes';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SnackBar from "containers/SnackBar";
 
 const key = "global";
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
       <Helmet titleTemplate="Vending Machine" defaultTitle="Vending Machine">
         <meta name="description" content="Vending Machine Demo" />
       </Helmet>
+        <SnackBar/>
       <main className="content">
         <Switch>
           {publicRoutes.map((route) => (

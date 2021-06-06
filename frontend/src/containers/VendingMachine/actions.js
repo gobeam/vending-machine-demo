@@ -6,6 +6,7 @@
 
 import {
   ASSIGN_PRODUCTS,
+  ASSIGN_CUSTOMER,
   ASSIGN_VENDING_MACHINE,
   QUERY_PRODUCTS,
   QUERY_VENDING_MACHINE,
@@ -14,13 +15,65 @@ import {
   VALIDATE_FORM,
   CHANGE_FORM_FIELD,
   CREATE_CUSTOMER,
+  QUERY_VENDING_BALANCE,
   SUBMIT_FORM,
+  ASSIGN_VENDING_BALANCE,
+  ADD_ORDER,
+  QUERY_CUSTOMER_EXPENSE,
+  ASSIGN_CUSTOMER_EXPENSE,
+  QUERY_CUSTOMER_ORDERS,
+  ASSIGN_CUSTOMER_ORDERS, REFUND_ORDER_ACTION,
 } from "containers/VendingMachine/constants";
-import { ADD_VALIDATION_ERROR } from 'containers/VendingMachine/constants';
+import { ADD_VALIDATION_ERROR } from "containers/VendingMachine/constants";
 
 export function queryVendingMachineAction() {
   return {
     type: QUERY_VENDING_MACHINE,
+  };
+}
+export function refundOrderAction(id) {
+  return {
+    type: REFUND_ORDER_ACTION,
+    id
+  };
+}
+
+export function queryCustomerExpense() {
+  return {
+    type: QUERY_CUSTOMER_EXPENSE,
+  };
+}
+
+export function queryCustomerOrderAction() {
+  return {
+    type: QUERY_CUSTOMER_ORDERS,
+  };
+}
+
+export function assignCustomerOrderAction(data) {
+  return {
+    type: ASSIGN_CUSTOMER_ORDERS,
+    data
+  };
+}
+
+export function addOrderAction(id) {
+  return {
+    type: ADD_ORDER,
+    id,
+  };
+}
+
+export function assignCustomerExpense(data) {
+  return {
+    type: ASSIGN_CUSTOMER_EXPENSE,
+    data,
+  };
+}
+
+export function queryVendingBalance() {
+  return {
+    type: QUERY_VENDING_BALANCE,
   };
 }
 
@@ -36,6 +89,12 @@ export function assignVendingMachineAction(data) {
     data,
   };
 }
+export function assignVendingBalanceAction(data) {
+  return {
+    type: ASSIGN_VENDING_BALANCE,
+    data,
+  };
+}
 
 export function queryProductsAction() {
   return {
@@ -46,6 +105,13 @@ export function queryProductsAction() {
 export function assignProductsAction(data) {
   return {
     type: ASSIGN_PRODUCTS,
+    data,
+  };
+}
+
+export function assignCustomerAction(data) {
+  return {
+    type: ASSIGN_CUSTOMER,
     data,
   };
 }

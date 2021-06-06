@@ -19,7 +19,6 @@ export class VendingMachineSeed {
   async create() {
     const vend = await this.service.create({
       name: 'test-vending',
-      balance: 100,
     });
     if (vend) {
       await this.balanceService.create({

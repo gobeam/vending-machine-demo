@@ -1,4 +1,8 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,8 +13,7 @@ import { Customer, CustomerDocument } from './entities/customer.entity';
 export class CustomerService {
   constructor(
     @InjectModel('Customer') private readonly model: Model<CustomerDocument>,
-  ) {
-  }
+  ) {}
 
   /**
    * create new customer
@@ -38,13 +41,20 @@ export class CustomerService {
 
   /**
    * update customer by id
-   * @param _id
+   * @param id
    * @param updateCustomerDto
    */
-  update(_id: string, updateCustomerDto: UpdateCustomerDto): Promise<Customer> {
-    return this.model
-      .findOneAndUpdate({ _id }, updateCustomerDto, { new: true })
-      .exec();
+  async update(
+    id: string,
+    updateCustomerDto: UpdateCustomerDto,
+  ): Promise<Customer> {
+    const customer = await this.model.findById(id).exec();
+    if (!customer) {
+      throw new NotFoundException('customer not found');
+    }
+    customer.balance += Number(updateCustomerDto.balance);
+    await customer.save();
+    return customer;
   }
 
   /**

@@ -24,7 +24,8 @@ function checkStatus(response) {
     return response;
   }
   // send validation error
-  if (response.status === 422) {
+  const statusCode = [422, 403];
+  if (statusCode.includes(response.status)) {
     return response;
   }
   const error = new Error(response.statusText);

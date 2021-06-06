@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
+import 'index.css';
 import App from 'containers/App';
 import configureStore from 'configure-store';
 import { throttle } from 'lodash';
@@ -19,8 +20,8 @@ const MOUNT_NODE = document.getElementById('root');
 store.subscribe(
     throttle(() => {
         saveState({
-            language: store.getState().language,
             global: store.getState().global,
+            // vendingMachine: store.getState().vendingMachine,
         });
     }, 1000),
 );

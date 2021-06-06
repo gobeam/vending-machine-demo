@@ -11,9 +11,10 @@ const stateSelector = createStructuredSelector({
 });
 
 const ProductList = () => {
-	const {products, isLoading} = useSelector(stateSelector);
+	const {products} = useSelector(stateSelector);
 	return (
 		<Row>
+			{products.length < 1 ? <h5>No Product available</h5> : ""}
 			{products.map((product) => (
 				<Product key={product.id} product={product}/>
 			))}

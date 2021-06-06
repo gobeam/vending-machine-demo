@@ -94,6 +94,17 @@ export class OrderService {
   }
 
   /**
+   * get customer order
+   * @param id
+   */
+  getCustomerOrder(id: string): Promise<Order[]> {
+    return this.model
+      .find({ customer: id, status: OrderStatusInterface.PAID })
+      .populate('product')
+      .exec();
+  }
+
+  /**
    * get expense balance
    * @param id
    */
