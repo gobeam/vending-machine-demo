@@ -13,6 +13,7 @@ import { useInjectSaga } from 'utils/injectSaga';
 import saga from 'containers/App/saga';
 import { publicRoutes } from 'routes';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const key = "global";
 export default function App() {

@@ -7,7 +7,7 @@ import { ProductService } from '../product/product.service';
 import { CustomerService } from '../customer/customer.service';
 import { BalanceService } from '../balance/balance.service';
 import { BalanceTypeInterface } from '../balance/interfaces/balance-type.interface';
-import {OrderStatusInterface} from "./interfaces/order-status.interface";
+import { OrderStatusInterface } from './interfaces/order-status.interface';
 
 @Injectable()
 export class OrderService {
@@ -23,15 +23,32 @@ export class OrderService {
    * @param createOrderDto
    */
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    let product = await this.productService.findOne(createOrderDto.product);
+    const product = await this.productService.findOne(createOrderDto.product);
     if (!product) {
       throw new ForbiddenException('invalid product id supplied');
     }
-    let customer = await this.customerService.findOne(createOrderDto.customer);
+    const customer = await this.customerService.findOne(
+      createOrderDto.customer,
+    );
     if (!customer) {
       throw new ForbiddenException('invalid customer id supplied');
     }
     const orderAmount = product.price * createOrderDto.quantity;
+
+    //check stock available
+    const stockDetailArray = await this.getProductStockDetail(
+      createOrderDto.product,
+    );
+    if (stockDetailArray && stockDetailArray[0]) {
+      const remainingStock =
+        product.stock -
+        (stockDetailArray[0]['paidStock'] - stockDetailArray[0]['refundStock']);
+      if (remainingStock < createOrderDto.quantity) {
+        throw new ForbiddenException('out of stock');
+      }
+    }
+
+    // check if balance available
     const customerExpenseBalance = await this.getCustomerPaidOrderBalance(
       createOrderDto.customer,
     );
@@ -62,7 +79,7 @@ export class OrderService {
    * @param id
    */
   async refund(id: string): Promise<Order> {
-    let order = await this.model.findById(id).exec();
+    const order = await this.model.findById(id).exec();
     if (order.status === OrderStatusInterface.REFUND) {
       throw new ForbiddenException('order already refunded');
     }
@@ -82,7 +99,7 @@ export class OrderService {
    */
   async getExpenseBalance(id: string) {
     let expenseAmount = 0;
-    let result = await this.getCustomerPaidOrderBalance(id);
+    const result = await this.getCustomerPaidOrderBalance(id);
     if (result[0]) {
       expenseAmount += result[0]['totalAmount'];
     }
@@ -90,6 +107,44 @@ export class OrderService {
       customer: id,
       expenseAmount,
     };
+  }
+
+  /**
+   * get product stock detail
+   * @param product
+   */
+  async getProductStockDetail(product: string) {
+    return this.model
+      .aggregate([
+        {
+          $match: {
+            product: new mongoose.Types.ObjectId(product),
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            paidStock: {
+              $sum: {
+                $cond: [{ $eq: ['$status', 'paid'] }, '$quantity', 0],
+              },
+            },
+            refundStock: {
+              $sum: {
+                $cond: [{ $eq: ['$status', 'refund'] }, '$quantity', 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            paidStock: 1,
+            refundStock: 1,
+          },
+        },
+      ])
+      .exec();
   }
 
   /**

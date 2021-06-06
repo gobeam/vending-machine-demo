@@ -1,5 +1,5 @@
 export enum OrderStatusInterface {
-    PAID = 'paid',
-    UNPAID = 'unpaid',
-    REFUND = 'refund',
+  PAID = 'paid',
+  UNPAID = 'unpaid',
+  REFUND = 'refund',
 }

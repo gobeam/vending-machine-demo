@@ -21,7 +21,7 @@ export class ProductService {
    * Get all products
    */
   async findAll(): Promise<Product[]> {
-    return this.model.find().exec();
+    return await this.model.find({}).populate('order').exec();
   }
 
   /**

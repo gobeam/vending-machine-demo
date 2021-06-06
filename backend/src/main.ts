@@ -3,14 +3,14 @@ import { AppModule } from './app.module';
 import {
   Logger,
   UnprocessableEntityException,
-  ValidationPipe
+  ValidationPipe,
 } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import * as config from 'config';
 import {
   DocumentBuilder,
   SwaggerCustomOptions,
-  SwaggerModule
+  SwaggerModule,
 } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -26,32 +26,32 @@ async function bootstrap() {
   }
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        exceptionFactory: (errors) => {
-          const errorMessages = { error: {} };
-          errors.forEach(
-              (error) =>
-                  (errorMessages.error[error.property] = Object.values(
-                      error.constraints
-                  )
-                      .join('. ')
-                      .trim())
-          );
-          return new UnprocessableEntityException(errorMessages);
-        }
-      })
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      exceptionFactory: (errors) => {
+        const errorMessages = { error: {} };
+        errors.forEach(
+          (error) =>
+            (errorMessages.error[error.property] = Object.values(
+              error.constraints,
+            )
+              .join('. ')
+              .trim()),
+        );
+        return new UnprocessableEntityException(errorMessages);
+      },
+    }),
   );
   const apiConfig = config.get('app');
   const swaggerConfig = new DocumentBuilder()
-      .setTitle(apiConfig.name)
-      .setDescription(apiConfig.description)
-      .setVersion(apiConfig.version)
-      .build();
+    .setTitle(apiConfig.name)
+    .setDescription(apiConfig.description)
+    .setVersion(apiConfig.version)
+    .build();
   const customOptions: SwaggerCustomOptions = {
-    customSiteTitle: apiConfig.description
+    customSiteTitle: apiConfig.description,
   };
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document, customOptions);

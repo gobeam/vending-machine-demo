@@ -23,37 +23,39 @@ export class BalanceService {
    * @param id
    */
   async getBalance(id: string) {
-    let debitAmount: number = 0;
-    let creditAmount: number = 0;
-    const result = await this.model.aggregate([
-      {
-        $match: {
-          vendingMachine: new mongoose.Types.ObjectId(id),
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          creditAmount: {
-            $sum: {
-              $cond: [{ $eq: ['$type', 'credit'] }, '$amount', 0],
-            },
-          },
-          debitAmount: {
-            $sum: {
-              $cond: [{ $eq: ['$type', 'debit'] }, '$amount', 0],
-            },
+    let debitAmount = 0;
+    let creditAmount = 0;
+    const result = await this.model
+      .aggregate([
+        {
+          $match: {
+            vendingMachine: new mongoose.Types.ObjectId(id),
           },
         },
-      },
-      {
-        $project: {
-          _id: 0,
-          creditAmount: 1,
-          debitAmount: 1,
+        {
+          $group: {
+            _id: null,
+            creditAmount: {
+              $sum: {
+                $cond: [{ $eq: ['$type', 'credit'] }, '$amount', 0],
+              },
+            },
+            debitAmount: {
+              $sum: {
+                $cond: [{ $eq: ['$type', 'debit'] }, '$amount', 0],
+              },
+            },
+          },
         },
-      },
-    ]).exec();
+        {
+          $project: {
+            _id: 0,
+            creditAmount: 1,
+            debitAmount: 1,
+          },
+        },
+      ])
+      .exec();
     if (result[0]) {
       debitAmount += result[0]['debitAmount'];
       creditAmount += result[0]['creditAmount'];

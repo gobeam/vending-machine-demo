@@ -1,5 +1,7 @@
 /**
- * Asynchronously loads the component for Vending machine container
+ *
+ * Asynchronously loads the component for VendingMachine
+ *
  */
 
 import React from 'react';
