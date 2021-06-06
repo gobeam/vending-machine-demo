@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ErrorFallback = (props) => {
-  const { error, resetErrorBoundary, intl } = props;
+  const { error, resetErrorBoundary } = props;
   return (
     <div role="alert">
       <p>Something went wrong:</p>
