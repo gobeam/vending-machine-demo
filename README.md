@@ -3,10 +3,13 @@
 This project was made to simulate on how vending machine works. We have two application frontend and backend. Frontend is made with React & Redux saga. Meanwhile backend is made using Nodejs typescript framework Nestjs.
 
 ### Run application with docker
-to run application with docker we have docker-compose.yml file in root of this project. Configuration only for development purpose.
+To run application with docker we have docker-compose.yml file in root of this project. This configuration is only for development purpose.
  Before running application be sure to checkout docker-compose.yml and review volumes attached in services.
- _In Mongodb service named db_mongo_service we have attached /data/db of host machine make sure its is accessible to docker otherwise feel free to attach your own custom directory._
-_In backend config I've added default configuration from docker-compose.yml for development so you don't need to change anything but if you made any changes on docker-compose.yml be sure to update backend configuration too._
+
+**In Mongodb service named db_mongo_service we have attached /data/db of host machine make sure its is accessible to docker otherwise feel free to attach your own custom directory.**
+ 
+**In backend config I've added default configuration from docker-compose.yml for development so you don't need to change anything but if you made any changes on docker-compose.yml be sure to update backend configuration too.**
+
 1) Make sure docker and docker-compose is configured in your machine.
 2) Run following command
     ```bash
