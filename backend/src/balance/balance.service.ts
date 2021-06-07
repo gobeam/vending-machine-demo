@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
-import { Model } from 'mongoose';
+import { Types, Model } from 'mongoose';
 import { Balance, BalanceDocument } from './entities/balance.entity';
 
 @Injectable()
@@ -14,7 +13,7 @@ export class BalanceService {
    * add new balance
    * @param createBalanceDto
    */
-  create(createBalanceDto: Balance): Promise<Balance> {
+  create(createBalanceDto: Partial<Balance>): Promise<Balance> {
     return this.model.create(createBalanceDto);
   }
 
@@ -29,7 +28,7 @@ export class BalanceService {
       .aggregate([
         {
           $match: {
-            vendingMachine: new mongoose.Types.ObjectId(id),
+            vendingMachine: Types.ObjectId.createFromHexString(id),
           },
         },
         {

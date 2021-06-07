@@ -1,6 +1,6 @@
-import {useEffect} from 'react';
-import {useStore} from 'react-redux';
-import getInjectors from 'utils/sagaInjectors';
+import { useEffect } from "react";
+import { useStore } from "react-redux";
+import getInjectors from "utils/sagaInjectors";
 
 const useInjectSaga = ({ key, saga, mode }) => {
   const store = useStore();

@@ -1,18 +1,18 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
 import { Order, OrderDocument } from './entities/order.entity';
 import { ProductService } from '../product/product.service';
 import { CustomerService } from '../customer/customer.service';
 import { BalanceService } from '../balance/balance.service';
 import { BalanceTypeInterface } from '../balance/interfaces/balance-type.interface';
 import { OrderStatusInterface } from './interfaces/order-status.interface';
+import { Types, Model } from 'mongoose';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectModel('Order') private readonly model: mongoose.Model<OrderDocument>,
+    @InjectModel('Order') private readonly model: Model<OrderDocument>,
     private readonly productService: ProductService,
     private readonly customerService: CustomerService,
     private readonly balanceService: BalanceService,
@@ -129,7 +129,7 @@ export class OrderService {
       .aggregate([
         {
           $match: {
-            product: new mongoose.Types.ObjectId(product),
+            product: Types.ObjectId.createFromHexString(product),
           },
         },
         {
@@ -168,7 +168,7 @@ export class OrderService {
         {
           $match: {
             status: OrderStatusInterface.PAID,
-            customer: new mongoose.Types.ObjectId(customer),
+            customer: Types.ObjectId.createFromHexString(customer),
           },
         },
         {

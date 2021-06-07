@@ -1,0 +1,10 @@
+{
+  "db": {
+    "host": "db_mongo_service.prod",
+    "type": "mongodb",
+    "port": 27017,
+    "database": "admin",
+    "username": "admin",
+    "password": "adminpw"
+  }
+}

@@ -1,2 +1,1 @@
-export default function* appPageSaga() {
-}
+export default function* appPageSaga() {}

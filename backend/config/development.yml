@@ -1,6 +1,0 @@
-db:
-  host: 'localhost'
-  type: 'mongodb'
-  port: 27017
-  username:
-  password:

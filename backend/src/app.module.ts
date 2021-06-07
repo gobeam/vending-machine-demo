@@ -8,13 +8,15 @@ import { VendingMachineModule } from './vending-machine/vending-machine.module';
 import { CustomerModule } from './customer/customer.module';
 import { OrderModule } from './order/order.module';
 import { BalanceModule } from './balance/balance.module';
-
-const { type, host, database, port } = config.db;
-console.log(`${type}://${host}:${port}/${database}`);
+const dbConfig = config.get('db');
 
 @Module({
   imports: [
-    MongooseModule.forRoot(`${type}://${host}:${port}/${database}`),
+    MongooseModule.forRoot(
+      `${dbConfig.type}://${dbConfig.username ? dbConfig.username + ':' : ''}${
+        dbConfig.password ? dbConfig.password + '@' : ''
+      }${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`,
+    ),
     ProductModule,
     SeedsModule,
     VendingMachineModule,

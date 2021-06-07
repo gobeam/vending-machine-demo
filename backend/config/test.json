@@ -1,0 +1,8 @@
+{
+  "db": {
+    "host": "localhost",
+    "type": "mongodb",
+    "port": 27017,
+    "database": "vending_test"
+  }
+}

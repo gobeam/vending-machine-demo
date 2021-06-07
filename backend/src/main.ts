@@ -6,12 +6,13 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import * as config from 'config';
 import {
   DocumentBuilder,
   SwaggerCustomOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+process.env['NODE_CONFIG_DIR'] = __dirname + '/../config/';
+import * as config from 'config';
 
 async function bootstrap() {
   const logger = new Logger('bootstrap');

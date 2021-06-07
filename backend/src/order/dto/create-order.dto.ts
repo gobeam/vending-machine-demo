@@ -1,6 +1,7 @@
 import { IsIn, IsNotEmpty, IsNumberString } from 'class-validator';
-import {ApiProperty} from "@nestjs/swagger";
-import {PaymentTypeInterface} from "../interfaces/payment-type.interface";
+import { ApiProperty } from '@nestjs/swagger';
+import { PaymentTypeInterface } from '../interfaces/payment-type.interface';
+import { IsObjectId } from '../../common/decorators/valid-mongo-id.decorator';
 
 export class CreateOrderDto {
   @ApiProperty()
@@ -10,14 +11,17 @@ export class CreateOrderDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  @IsObjectId({ message: 'invalid id' })
   product: string;
 
   @ApiProperty()
   @IsNotEmpty()
+  @IsObjectId({ message: 'invalid id' })
   customer: string;
 
   @ApiProperty()
   @IsNotEmpty()
+  @IsObjectId({ message: 'invalid id' })
   vendingMachine: string;
 
   @ApiProperty()

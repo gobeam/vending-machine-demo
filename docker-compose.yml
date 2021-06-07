@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+  backend:
+    container_name: backend.dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    command:
+      - /bin/bash
+      - -c
+      - |
+        npx nestjs-command seed:vend
+        npx nestjs-command seed:product
+        npm run start:debug
+    ports:
+      - 7777:7777
+    environment:
+      - NODE_ENV=production
+    networks:
+      - db_mongo_network
+    depends_on:
+      - db_mongo_service
+
+  frontend:
+    container_name: frontend.dev
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - './frontend:/app'
+      - '/app/node_modules'
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  db_mongo_service:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpw
+    container_name: db_mongo_service.dev
+    networks:
+      - db_mongo_network
+    restart: "no"
+    ports:
+      - "27017:27017"
+    hostname: db_mongo_service.dev
+    volumes:
+      - /data/db:/data/db #first one seperated by ":" is host directory and second one is container directory, if you want to attach custom directory be sure to change only first one
+
+
+networks:
+  db_mongo_network:
+    driver: bridge
+

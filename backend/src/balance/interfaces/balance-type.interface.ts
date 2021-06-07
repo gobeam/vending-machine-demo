@@ -1,4 +1,4 @@
 export enum BalanceTypeInterface {
-    DEBIT = 'debit',
-    CREDIT = 'credit',
+  DEBIT = 'debit',
+  CREDIT = 'credit',
 }

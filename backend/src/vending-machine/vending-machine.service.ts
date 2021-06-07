@@ -14,7 +14,7 @@ export class VendingMachineService {
    * Create new vending Machine
    * @param createVendingMachineDto
    */
-  create(createVendingMachineDto: VendingMachine): Promise<VendingMachine> {
+  create(createVendingMachineDto: VendingMachine) {
     return this.model.create(createVendingMachineDto);
   }
 

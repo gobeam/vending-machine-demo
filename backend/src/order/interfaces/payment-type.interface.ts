@@ -1,4 +1,4 @@
 export enum PaymentTypeInterface {
-    COIN = 'coin',
-    CASH = 'cash',
+  COIN = 'coin',
+  CASH = 'cash',
 }
