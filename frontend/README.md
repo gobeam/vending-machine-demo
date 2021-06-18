@@ -3,7 +3,7 @@
     ```bash
     yarn i
     ```
-2)) Set up environment. Copy .env.example to create new .env file and add backend base url to env key. For Example: 
+2) Set up environment. Copy .env.example to create new .env file and add backend base url to env key. For Example: 
     ```bash
     cp .env.example .env
     ```
