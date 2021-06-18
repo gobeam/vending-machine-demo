@@ -21,7 +21,7 @@ store.subscribe(
     throttle(() => {
         saveState({
             global: store.getState().global,
-            // vendingMachine: store.getState().vendingMachine,
+            vendingMachine: store.getState().vendingMachine,
         });
     }, 1000),
 );
