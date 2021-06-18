@@ -13,7 +13,7 @@ const dbConfig = config.get('db');
 @Module({
   imports: [
     MongooseModule.forRoot(
-      `${dbConfig.type}://${dbConfig.username ? dbConfig.username + ':' : ''}${
+      process.env.MONGO_URI || `${dbConfig.type}://${dbConfig.username ? dbConfig.username + ':' : ''}${
         dbConfig.password ? dbConfig.password + '@' : ''
       }${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`,
     ),
