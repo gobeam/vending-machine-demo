@@ -1,7 +1,7 @@
 # Project Description
 
 This project was made to simulate on how vending machine works. We have two application frontend and backend. Frontend is made with React & Redux saga. Meanwhile backend is made using Nodejs typescript framework Nestjs.
-See Live demo [here](https://vendor-machine-demo.vercel.app).
+See Live demo [here](https://vendor-machine.vercel.app/).
 
 ### Run application with docker
 To run application with docker we have docker-compose.yml file in root of this project. This configuration is only for development purpose.
